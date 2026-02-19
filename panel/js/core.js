@@ -36,17 +36,6 @@ const logFilters = {
 };
 const THEME_STORAGE_KEY = 'themeMode';
 
-const LOG_MODULE_LABELS = {
-    farm: '农场',
-    friend: '好友',
-    scheduler: '调度',
-    warehouse: '仓库',
-    task: '任务',
-    frontend: '前端',
-    account: '账号',
-    system: '系统',
-};
-
 const LOG_EVENT_LABELS = {
     farm_cycle: '农场巡查',
     harvest_crop: '收获作物',
@@ -439,7 +428,7 @@ function initLogFiltersUI() {
 
 function buildLogQuery() {
     const p = new URLSearchParams();
-    p.set('limit', '200');
+    p.set('limit', '1000');
     p.set('accountId', logFilterAccountId || 'all');
     if (logFilters.module) p.set('module', logFilters.module);
     if (logFilters.event) p.set('event', logFilters.event);

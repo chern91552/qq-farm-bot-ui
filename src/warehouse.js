@@ -280,15 +280,6 @@ async function sellAllFruits() {
             totalsDeltaGold,
             totalsDeltaExp,
         });
-        if (totalGoldEarned <= 0) {
-            logWarn('仓库', '出售成功，但暂未解析到金币增量（可能由服务器延迟同步）', {
-                module: 'warehouse',
-                event: 'sell_gain_pending',
-                result: 'warn',
-                count: toSell.length,
-                goldBefore,
-            });
-        }
         
         // 发送出售事件，用于统计金币收益
         if (totalGoldEarned > 0) {

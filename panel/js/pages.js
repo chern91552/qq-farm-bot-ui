@@ -388,11 +388,11 @@ $('fertilizer-select').addEventListener('change', async () => {
     const el = document.getElementById(id);
     if(el) {
         el.addEventListener('change', async () => {
-            if (!currentAccountId) return;
-            markAutomationPending(key);
             if (id === 'auto-friend') {
                 updateFriendSubControlsState();
             }
+            if (!currentAccountId) return;
+            markAutomationPending(key);
         });
     }
 });
@@ -502,6 +502,20 @@ async function loadSettings() {
             } else {
                 sel.value = String(data.preferredSeed || 0);
             }
+        }
+        if (data.automation && typeof data.automation === 'object') {
+            const auto = data.automation;
+            $('auto-farm').checked = !!auto.farm;
+            $('auto-farm-push').checked = !!auto.farm_push;
+            $('auto-land-upgrade').checked = !!auto.land_upgrade;
+            $('auto-friend').checked = !!auto.friend;
+            $('auto-task').checked = !!auto.task;
+            $('auto-sell').checked = !!auto.sell;
+            $('auto-friend-steal').checked = !!auto.friend_steal;
+            $('auto-friend-help').checked = !!auto.friend_help;
+            $('auto-friend-bad').checked = !!auto.friend_bad;
+            if (auto.fertilizer) $('fertilizer-select').value = auto.fertilizer;
+            updateFriendSubControlsState();
         }
         await refreshSeedSelectByStrategy();
         if (data.friendQuietHours) {

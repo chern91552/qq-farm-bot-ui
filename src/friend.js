@@ -19,7 +19,6 @@ let friendCheckTimer = null;
 let friendLoopRunning = false;
 let externalSchedulerMode = false;
 let lastResetDate = '';  // 上次重置日期 (YYYY-MM-DD)
-let lastQuietSkipLogAt = 0; // 控制静默时段日志频率
 
 // 操作限制状态 (从服务器响应中更新)
 // 操作类型ID (根据游戏代码):
@@ -861,14 +860,6 @@ async function checkFriends() {
     const state = getUserState();
     if (isCheckingFriends || !state.gid || !isAutomationOn('friend')) return false;
     if (inFriendQuietHours()) {
-        const nowTs = Date.now();
-        if (nowTs - lastQuietSkipLogAt > 300000) { // 每5分钟最多提示一次
-            const cfg = getFriendQuietHours();
-            log('好友', `当前处于静默时段 ${cfg.start}-${cfg.end}，跳过好友互动`, {
-                module: 'friend', event: 'quiet_hours', result: 'skip', start: cfg.start, end: cfg.end
-            });
-            lastQuietSkipLogAt = nowTs;
-        }
         return false;
     }
     isCheckingFriends = true;

@@ -135,7 +135,7 @@ async function runUnifiedTick() {
             nextFriendRunAt = Date.now() + friendMs;
         }
     } catch (e) {
-        log('系统', `统一调度执行失败: ${e.message}`, { module: 'scheduler', event: 'tick', result: 'error' });
+        log('系统', `统一调度执行失败: ${e.message}`, { module: 'system', event: 'tick', result: 'error' });
     } finally {
         unifiedTaskRunning = false;
     }

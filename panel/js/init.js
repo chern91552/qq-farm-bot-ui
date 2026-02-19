@@ -49,41 +49,53 @@ if (loginInput) {
 const logsFilterSel = $('logs-account-filter');
 if (logsFilterSel) {
     logsFilterSel.value = logFilterAccountId;
-    logsFilterSel.addEventListener('change', () => {
+    const onAccountFilterChange = () => {
         logFilterAccountId = logsFilterSel.value || 'all';
         localStorage.setItem('logFilterAccountId', logFilterAccountId);
         pollLogs();
-    });
+    };
+    logsFilterSel.addEventListener('change', onAccountFilterChange);
+    logsFilterSel.addEventListener('input', onAccountFilterChange);
+    logsFilterSel.addEventListener('blur', onAccountFilterChange);
 }
 
 const logsModuleSel = $('logs-module-filter');
 if (logsModuleSel) {
     logsModuleSel.value = logFilters.module;
-    logsModuleSel.addEventListener('change', () => {
+    const onModuleFilterChange = () => {
         logFilters.module = logsModuleSel.value || '';
         localStorage.setItem('logFilterModule', logFilters.module);
         pollLogs();
-    });
+    };
+    logsModuleSel.addEventListener('change', onModuleFilterChange);
+    logsModuleSel.addEventListener('input', onModuleFilterChange);
+    logsModuleSel.addEventListener('blur', onModuleFilterChange);
 }
 
 const logsWarnSel = $('logs-warn-filter');
 if (logsWarnSel) {
     logsWarnSel.value = logFilters.isWarn;
-    logsWarnSel.addEventListener('change', () => {
+    const onWarnFilterChange = () => {
         logFilters.isWarn = logsWarnSel.value || '';
         localStorage.setItem('logFilterIsWarn', logFilters.isWarn);
         pollLogs();
-    });
+    };
+    logsWarnSel.addEventListener('change', onWarnFilterChange);
+    logsWarnSel.addEventListener('input', onWarnFilterChange);
+    logsWarnSel.addEventListener('blur', onWarnFilterChange);
 }
 
-const logsEventInput = $('logs-event-filter');
-if (logsEventInput) {
-    logsEventInput.value = logFilters.event;
-    logsEventInput.addEventListener('change', () => {
-        logFilters.event = logsEventInput.value.trim();
+const logsEventFilter = $('logs-event-filter');
+if (logsEventFilter) {
+    logsEventFilter.value = logFilters.event;
+    const onEventFilterChange = () => {
+        logFilters.event = String(logsEventFilter.value || '').trim();
         localStorage.setItem('logFilterEvent', logFilters.event);
         pollLogs();
-    });
+    };
+    logsEventFilter.addEventListener('change', onEventFilterChange);
+    logsEventFilter.addEventListener('input', onEventFilterChange);
+    logsEventFilter.addEventListener('blur', onEventFilterChange);
 }
 
 const logsKeywordInput = $('logs-keyword-filter');
@@ -91,35 +103,48 @@ if (logsKeywordInput) {
     logsKeywordInput.value = logFilters.keyword;
     let keywordTimer = null;
     const onKeywordChange = () => {
+        const next = logsKeywordInput.value.trim();
+        if (!next) {
+            if (keywordTimer) clearTimeout(keywordTimer);
+            logFilters.keyword = '';
+            localStorage.setItem('logFilterKeyword', logFilters.keyword);
+            pollLogs();
+            return;
+        }
         if (keywordTimer) clearTimeout(keywordTimer);
         keywordTimer = setTimeout(() => {
-            logFilters.keyword = logsKeywordInput.value.trim();
+            logFilters.keyword = next;
             localStorage.setItem('logFilterKeyword', logFilters.keyword);
             pollLogs();
         }, 250);
     };
     logsKeywordInput.addEventListener('input', onKeywordChange);
+    logsKeywordInput.addEventListener('search', onKeywordChange);
     logsKeywordInput.addEventListener('change', onKeywordChange);
 }
 
 const logsTimeFromInput = $('logs-time-from-filter');
 if (logsTimeFromInput) {
     logsTimeFromInput.value = logFilters.timeFrom;
-    logsTimeFromInput.addEventListener('change', () => {
+    const onTimeFromChange = () => {
         logFilters.timeFrom = logsTimeFromInput.value || '';
         localStorage.setItem('logFilterTimeFrom', logFilters.timeFrom);
         pollLogs();
-    });
+    };
+    logsTimeFromInput.addEventListener('change', onTimeFromChange);
+    logsTimeFromInput.addEventListener('input', onTimeFromChange);
 }
 
 const logsTimeToInput = $('logs-time-to-filter');
 if (logsTimeToInput) {
     logsTimeToInput.value = logFilters.timeTo;
-    logsTimeToInput.addEventListener('change', () => {
+    const onTimeToChange = () => {
         logFilters.timeTo = logsTimeToInput.value || '';
         localStorage.setItem('logFilterTimeTo', logFilters.timeTo);
         pollLogs();
-    });
+    };
+    logsTimeToInput.addEventListener('change', onTimeToChange);
+    logsTimeToInput.addEventListener('input', onTimeToChange);
 }
 
 initLogFiltersUI();

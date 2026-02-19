@@ -56,17 +56,73 @@ function normalizeMeta(meta) {
     return { ...meta };
 }
 
-function log(tag, msg, meta = null) {
-    console.log(`[${now()}] [${tag}] ${msg}`);
+function resolveModuleTag(moduleName) {
+    const moduleMap = {
+        farm: '农场',
+        friend: '好友',
+        warehouse: '仓库',
+        task: '任务',
+        system: '系统',
+    };
+    const m = String(moduleName || '').trim();
+    return moduleMap[m] || '系统';
+}
+
+function inferModuleFromTag(tag) {
+    const t = String(tag || '').trim();
+    const tagMap = {
+        农场: 'farm',
+        商店: 'warehouse',
+        购买: 'warehouse',
+        仓库: 'warehouse',
+        好友: 'friend',
+        任务: 'task',
+        活跃: 'task',
+        系统: 'system',
+        错误: 'system',
+        WS: 'system',
+        心跳: 'system',
+        推送: 'system',
+    };
+    return tagMap[t] || 'system';
+}
+
+function normalizeLogArgs(arg1, arg2, arg3) {
+    // 新写法: log(msg, meta)
+    if (typeof arg2 !== 'string') {
+        return {
+            tag: '',
+            msg: String(arg1 || ''),
+            meta: arg2 || null,
+        };
+    }
+    // 兼容旧写法: log(tag, msg, meta)
+    return {
+        tag: String(arg1 || ''),
+        msg: String(arg2 || ''),
+        meta: arg3 || null,
+    };
+}
+
+function log(arg1, arg2, arg3 = null) {
+    const { tag, msg, meta } = normalizeLogArgs(arg1, arg2, arg3);
+    const safeMeta = normalizeMeta(meta);
+    if (!safeMeta.module) safeMeta.module = inferModuleFromTag(tag);
+    const displayTag = resolveModuleTag(safeMeta.module);
+    console.log(`[${now()}] [${displayTag}] ${msg}`);
     if (logHook) {
-        try { logHook(tag, msg, false, normalizeMeta(meta)); } catch (e) {}
+        try { logHook(displayTag, msg, false, safeMeta); } catch (e) {}
     }
 }
 
-function logWarn(tag, msg, meta = null) {
-    console.log(`[${now()}] [${tag}] ⚠ ${msg}`);
+function logWarn(arg1, arg2, arg3 = null) {
+    const { tag, msg, meta } = normalizeLogArgs(arg1, arg2, arg3);
+    const safeMeta = normalizeMeta(meta);
+    if (!safeMeta.module) safeMeta.module = inferModuleFromTag(tag);
+    const displayTag = resolveModuleTag(safeMeta.module);
+    console.log(`[${now()}] [${displayTag}] ⚠ ${msg}`);
     if (logHook) {
-        try { logHook(tag, msg, true, normalizeMeta(meta)); } catch (e) {}
+        try { logHook(displayTag, msg, true, safeMeta); } catch (e) {}
     }
 }
 

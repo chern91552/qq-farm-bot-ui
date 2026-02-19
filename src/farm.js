@@ -501,7 +501,7 @@ async function autoPlantEmptyLands(deadLandIds, emptyLandIds) {
     const growTime = getPlantGrowTime(1020000 + (bestSeed.seedId - 20000));  // 转换为植物ID
     const growTimeStr = growTime > 0 ? ` 生长${formatGrowTime(growTime)}` : '';
     log('商店', `最佳种子: ${seedName} (${bestSeed.seedId}) 价格=${bestSeed.price}金币${growTimeStr}`, {
-        module: 'farm', event: 'seed_pick', seedId: bestSeed.seedId, price: bestSeed.price
+        module: 'warehouse', event: 'seed_pick', seedId: bestSeed.seedId, price: bestSeed.price
     });
 
     // 3. 购买
@@ -534,7 +534,7 @@ async function autoPlantEmptyLands(deadLandIds, emptyLandIds) {
         }
         const boughtName = getPlantNameBySeedId(actualSeedId);
         log('购买', `已购买 ${boughtName}种子 x${landsToPlant.length}, 花费 ${bestSeed.price * landsToPlant.length} 金币`, {
-            module: 'farm',
+            module: 'warehouse',
             event: 'seed_buy',
             result: 'ok',
             seedId: actualSeedId,
@@ -858,7 +858,7 @@ async function runFarmOperation(opType) {
                     });
                     upgraded++;
                 } catch (e) {
-                    logWarn('升级', `土地#${landId} 升级失败: ${e.message}`, {
+                    log('升级', `土地#${landId} 升级失败: ${e.message}`, {
                         module: 'farm', event: 'upgrade_land', result: 'error', landId
                     });
                 }

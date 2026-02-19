@@ -53,7 +53,7 @@ function encodeMsg(serviceName, methodName, bodyBytes) {
 
 function sendMsg(serviceName, methodName, bodyBytes, callback) {
     if (!ws || ws.readyState !== WebSocket.OPEN) {
-        log('WS', '连接未打开');
+        log('系统', '[WS] 连接未打开');
         return false;
     }
     const seq = clientSeq;
@@ -468,7 +468,7 @@ function connect(code, onLoginSuccess) {
     });
 
     ws.on('error', (err) => {
-        logWarn('WS', `错误: ${err.message}`);
+        logWarn('系统', `[WS] 错误: ${err.message}`);
     });
 }
 

@@ -131,9 +131,7 @@ async function checkAndClaimActives(actives) {
             }
             await sleep(300);
         } catch (e) {
-            logWarn('活跃', `${typeName} 领取失败: ${e.message}`, {
-                module: 'task', event: 'active_claim', result: 'error', activeType
-            });
+            // 领取失败静默处理
         }
     }
 }
@@ -190,9 +188,7 @@ async function doClaim(task) {
         await sleep(300);
         return true;
     } catch (e) {
-        logWarn('任务', `领取失败 #${task.id}: ${e.message}`, {
-            module: 'task', event: 'task_claim', result: 'error', taskId: task.id
-        });
+        // 领取失败静默处理
         return false;
     }
 }

@@ -264,8 +264,9 @@ function startAdminServer(dataProvider) {
             const strategy = store.getPlantingStrategy(id);
             const preferredSeed = store.getPreferredSeed(id);
             const friendQuietHours = store.getFriendQuietHours(id);
+            const automation = store.getAutomation(id);
             const ui = store.getUI();
-            res.json({ ok: true, data: { intervals, strategy, preferredSeed, friendQuietHours, ui } });
+            res.json({ ok: true, data: { intervals, strategy, preferredSeed, friendQuietHours, automation, ui } });
         } catch (e) {
             res.status(500).json({ ok: false, error: e.message });
         }

@@ -164,12 +164,21 @@ function ensureVirtualLogBinding(wrap) {
 function buildLogRowHtml(l) {
     const name = l.accountName ? `【${l.accountName}】` : '';
     const timeStr = ((l.time || '').split(' ')[1] || (l.time || ''));
+    const moduleMap = {
+        farm: '农场',
+        friend: '好友',
+        warehouse: '仓库',
+        task: '任务',
+        system: '系统',
+    };
+    const moduleKey = (l.meta && l.meta.module) ? String(l.meta.module) : '';
+    const moduleLabel = moduleMap[moduleKey] || '系统';
     const eventKey = (l.meta && l.meta.event) ? String(l.meta.event) : '';
     const eventLabel = LOG_EVENT_LABELS[eventKey] || '';
     const ev = eventLabel ? `[${eventLabel}]` : '';
     return `<div class="log-row ${l.isWarn?'warn':''}">
         <span class="log-time">${escapeHtml(timeStr)}</span>
-        <span class="log-tag">[${escapeHtml(l.tag || '系统')}]</span>
+        <span class="log-tag">[${escapeHtml(moduleLabel)}]</span>
         <span class="log-msg">${escapeHtml(`${name}${ev} ${l.msg}`)}</span>
     </div>`;
 }
@@ -401,6 +410,7 @@ async function pollLogs() {
         const uiLogs = localUiLogs.filter(matchLogFilters);
         const normalized = [...serverLogs, ...uiLogs].sort((a, b) => toLogTs(a) - toLogTs(b));
         if (!normalized.length) {
+            lastLogsRenderKey = '';
             logVirtualItems = [];
             renderVirtualLogsWindow(wrap);
             return;
